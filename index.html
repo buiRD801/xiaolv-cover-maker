@@ -892,7 +892,6 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   <input type="file" id="file-input" accept="image/png,image/jpeg,image/webp,image/avif" hidden />
 </div>
 
-<script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
 <script>
 (function () {
   'use strict';
@@ -1207,10 +1206,19 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   });
 
   /* =========================================================
-     EXPORT PNG
+     EXPORT PNG — html2canvas (直接截圖真實 DOM)
      ========================================================= */
   var btn  = $$('download');
   var note = $$('note');
+
+  // Preload html2canvas on page load so first click is instant
+  var h2cReady = false;
+  (function(){
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = function(){ h2cReady = true; };
+    document.head.appendChild(s);
+  })();
 
   btn.addEventListener('click', async function () {
     btn.disabled = true;
@@ -1219,21 +1227,70 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 
     try {
       if (document.fonts && document.fonts.ready) await document.fonts.ready;
-      var opts = { width: 1080, height: 1920, pixelRatio: 1, cacheBust: true };
-      // warm-up pass (embeds fonts)
-      await htmlToImage.toPng(cover, opts);
-      var url = await htmlToImage.toPng(cover, opts);
-      var a = document.createElement('a');
-      a.download = '小旅選品-' + cur + '.png';
-      a.href = url;
-      a.click();
-      note.textContent = '已下載 ✓';
-    } catch (err) {
+
+      // Wait for html2canvas to load
+      if (!h2cReady) {
+        note.textContent = '載入引擎…';
+        await new Promise(function(res, rej) {
+          var t = 0;
+          var iv = setInterval(function(){
+            if (h2cReady){ clearInterval(iv); res(); }
+            if (++t > 80){ clearInterval(iv); rej(new Error('timeout')); }
+          }, 100);
+        });
+      }
+      note.textContent = '渲染中…';
+      await new Promise(function(r){ setTimeout(r, 80); });
+
+      var W = 1080, H = 1920;
+
+      // Temporarily undo the scaler so html2canvas reads full-size pixels
+      var prevTransform = scaler.style.transform;
+      scaler.style.transform = 'none';
+      cover.style.boxShadow  = 'none';
+
+      // Hide drop-zone UI
+      var uiEls = cover.querySelectorAll('.photo-empty, .text-bg-empty');
+      uiEls.forEach(function(el){ el.dataset.pd = el.style.display; el.style.display = 'none'; });
+
+      var canvas;
+      try {
+        canvas = await html2canvas(cover, {
+          scale: 1,
+          useCORS: true,
+          allowTaint: true,
+          width: W, height: H,
+          windowWidth: W, windowHeight: H,
+          x: 0, y: 0,
+          scrollX: 0, scrollY: 0,
+          logging: false,
+          imageTimeout: 15000,
+          removeContainer: true
+        });
+      } finally {
+        scaler.style.transform = prevTransform;
+        cover.style.boxShadow  = '';
+        uiEls.forEach(function(el){ el.style.display = el.dataset.pd || ''; });
+      }
+
+      canvas.toBlob(function(blob){
+        var blobUrl = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = '小旅選品-' + cur + '.png';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(blobUrl); }, 1000);
+        note.textContent = '已下載 ✓';
+        btn.disabled = false;
+        setTimeout(function(){ note.textContent = keep; }, 3000);
+      }, 'image/png');
+
+    } catch(err) {
       console.error(err);
       note.textContent = '匯出失敗，請再試一次';
-    } finally {
       btn.disabled = false;
-      setTimeout(function () { note.textContent = keep; }, 3000);
+      setTimeout(function(){ note.textContent = keep; }, 3000);
     }
   });
 

@@ -1244,14 +1244,36 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 
       var W = 1080, H = 1920;
 
-      // Temporarily undo the scaler so html2canvas reads full-size pixels
-      var prevTransform = scaler.style.transform;
-      scaler.style.transform = 'none';
+      // Move cover OUT of scaler to a fixed off-screen container at true 1080×1920
+      // This is the only reliable way — html2canvas must see the element at 1:1 scale
+      var offscreen = document.createElement('div');
+      offscreen.style.cssText = [
+        'position:fixed',
+        'left:-1200px',
+        'top:0',
+        'width:' + W + 'px',
+        'height:' + H + 'px',
+        'overflow:hidden',
+        'z-index:-1',
+        'pointer-events:none'
+      ].join(';');
+      document.body.appendChild(offscreen);
+
+      // Move cover into offscreen container
+      var coverParent = cover.parentNode;
+      var coverNext   = cover.nextSibling;
+      offscreen.appendChild(cover);
+      cover.style.transform  = 'none';
       cover.style.boxShadow  = 'none';
+      cover.style.width      = W + 'px';
+      cover.style.height     = H + 'px';
 
       // Hide drop-zone UI
       var uiEls = cover.querySelectorAll('.photo-empty, .text-bg-empty');
       uiEls.forEach(function(el){ el.dataset.pd = el.style.display; el.style.display = 'none'; });
+
+      // Force reflow
+      await new Promise(function(r){ setTimeout(r, 120); });
 
       var canvas;
       try {
@@ -1259,18 +1281,33 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
           scale: 1,
           useCORS: true,
           allowTaint: true,
-          width: W, height: H,
-          windowWidth: W, windowHeight: H,
-          x: 0, y: 0,
-          scrollX: 0, scrollY: 0,
+          width: W,
+          height: H,
+          windowWidth: W + 1200,
+          windowHeight: H,
+          x: 0,
+          y: 0,
+          scrollX: 0,
+          scrollY: 0,
           logging: false,
           imageTimeout: 15000,
           removeContainer: true
         });
       } finally {
-        scaler.style.transform = prevTransform;
-        cover.style.boxShadow  = '';
+        // Restore cover to original position inside scaler
         uiEls.forEach(function(el){ el.style.display = el.dataset.pd || ''; });
+        cover.style.transform = '';
+        cover.style.boxShadow = '';
+        cover.style.width     = '';
+        cover.style.height    = '';
+        if (coverNext) {
+          coverParent.insertBefore(cover, coverNext);
+        } else {
+          coverParent.appendChild(cover);
+        }
+        document.body.removeChild(offscreen);
+        // Re-apply scaler fit
+        fit();
       }
 
       canvas.toBlob(function(blob){

@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>小旅選品 — 封面 / 文字卡製作</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   TOKENS
+   ========================================================= */
+:root {
+  --ivory: #EFEAE1;
+  --paper: #F7F4ED;
+  --paper-2: #F2EDE4;
+  --ink: #2A2622;
+  --ink-soft: #6E665B;
+  --ink-faint: #A79E8F;
+  --bronze: #9C7C4E;
+  --bronze-soft: #B89A6E;
+  --line: #D7CFC0;
+  --line-soft: #E4DDD0;
+  --serif: "Noto Serif TC", serif;
+  --sans: "Manrope", "Noto Sans TC", sans-serif;
+  --sans-tc: "Noto Sans TC", "Manrope", sans-serif;
+  --latin-italic: "Cormorant Garamond", serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: var(--ivory); }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+/* =========================================================
+   APP SHELL
+   ========================================================= */
+.app { display: flex; height: 100vh; }
+
+/* =========================================================
+   LEFT PANEL
+   ========================================================= */
+.panel {
+  width: 352px;
+  flex: 0 0 352px;
+  height: 100%;
+  overflow-y: auto;
+  background: var(--paper);
+  border-right: 1px solid var(--line-soft);
+  padding: 24px 24px 80px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.panel::-webkit-scrollbar { width: 4px; }
+.panel::-webkit-scrollbar-track { background: transparent; }
+.panel::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+.brandbar {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.brandbar .mk {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 20px;
+  letter-spacing: .14em;
+  color: var(--ink);
+}
+.brandbar .mk b { color: var(--bronze); font-weight: 400; }
+.brandbar .tg {
+  font-family: var(--latin-italic);
+  font-style: italic;
+  color: var(--ink-faint);
+  font-size: 12px;
+}
+
+.panel-title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 22px;
+  letter-spacing: .04em;
+  color: var(--ink);
+  margin: 12px 0 2px;
+}
+.panel-sub {
+  font-family: var(--sans-tc);
+  font-weight: 300;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--line-soft);
+  margin: 16px 0;
+}
+
+/* --- section group --- */
+.grp { margin-bottom: 20px; }
+.grp[hidden] { display: none !important; }
+.grp > .lbl {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  font-weight: 700;
+  font-family: var(--sans);
+  margin-bottom: 10px;
+}
+
+/* --- segmented buttons --- */
+.seg { display: flex; gap: 5px; flex-wrap: wrap; }
+.seg.three button { flex: 1 1 calc(33.33% - 4px); }
+.seg button {
+  flex: 1;
+  appearance: none;
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 7px;
+  padding: 9px 6px;
+  cursor: pointer;
+  font-family: var(--sans-tc);
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  transition: all .16s ease;
+  line-height: 1.3;
+}
+.seg button.on {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.seg button:hover:not(.on) {
+  border-color: var(--ink-soft);
+  color: var(--ink);
+}
+
+/* --- accent swatches --- */
+.swatches { display: flex; gap: 9px; flex-wrap: wrap; }
+.swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  box-shadow: 0 0 0 1px var(--line) inset;
+  transition: all .16s ease;
+  position: relative;
+}
+.swatch.on {
+  border-color: var(--ink);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 1px var(--line) inset, 0 2px 8px rgba(0,0,0,.18);
+}
+
+/* --- form fields --- */
+.fld { margin-bottom: 12px; }
+.fld label {
+  display: block;
+  font-family: var(--sans-tc);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin-bottom: 5px;
+  letter-spacing: .03em;
+}
+.fld input,
+.fld textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--ivory);
+  padding: 8px 10px;
+  font-family: var(--sans-tc);
+  font-size: 13.5px;
+  color: var(--ink);
+  resize: none;
+  line-height: 1.5;
+  transition: border-color .16s;
+  -webkit-appearance: none;
+}
+.fld input:focus,
+.fld textarea:focus {
+  outline: none;
+  border-color: var(--bronze);
+  background: var(--paper);
+}
+.fld .two { display: flex; gap: 8px; }
+.fld .two > * { flex: 1; }
+.fld .two .narrow { flex: 0 0 90px; }
+
+.tip {
+  font-family: var(--sans-tc);
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+/* upload button (panel) */
+.upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  appearance: none;
+  border: 1.5px dashed var(--line);
+  border-radius: 8px;
+  background: var(--ivory);
+  padding: 11px;
+  cursor: pointer;
+  font-family: var(--sans-tc);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink-soft);
+  transition: all .18s ease;
+}
+.upload-btn:hover {
+  border-color: var(--bronze);
+  color: var(--bronze);
+  background: rgba(156,124,78,.06);
+}
+
+/* --- download button --- */
+.dlbtn {
+  width: 100%;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  background: var(--bronze);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  padding: 14px;
+  transition: all .2s ease;
+  margin-top: 4px;
+}
+.dlbtn:hover { background: var(--ink); }
+.dlbtn:disabled { opacity: .5; cursor: wait; }
+.note {
+  font-family: var(--sans-tc);
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   STAGE (right side preview)
+   ========================================================= */
+.stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #ece7dd,
+      #ece7dd 12px,
+      #e8e2d6 12px,
+      #e8e2d6 24px
+    );
+}
+
+.scaler { transform-origin: center center; }
+
+/* =========================================================
+   THE COVER — native 1080×1920
+   ========================================================= */
+.cover {
+  width: 1080px;
+  height: 1920px;
+  position: relative;
+  overflow: hidden;
+  color: #F7F4ED;
+  background: var(--ink);
+  --cbg: #2A2622;
+  box-shadow: 0 40px 120px -40px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.08);
+}
+.cover.light {
+  color: #2A2622;
+  background: var(--paper);
+  --cbg: #F7F4ED;
+}
+
+/* photo layer */
+.cover-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: none;
+  object-fit: cover;
+}
+.cover.has-photo .cover-photo { display: block; }
+.cover.light.has-photo .cover-photo {
+  inset: 236px 84px auto 84px;
+  width: calc(100% - 168px);
+  height: 840px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+/* photo drag-drop zone */
+.photo-drop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: none;
+  cursor: pointer;
+}
+.cover.has-photo .photo-drop { display: block; }
+.cover.light.has-photo .photo-drop {
+  inset: 236px 84px auto 84px;
+  width: calc(100% - 168px);
+  height: 840px;
+  border-radius: 14px;
+}
+.photo-empty {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(42,38,34,.06);
+  border: 2px dashed rgba(156,124,78,.4);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.cover.has-photo .photo-empty { display: none; }
+.cover.light .photo-empty {
+  inset: 236px 84px auto 84px;
+  height: 840px;
+  border-radius: 14px;
+  background: var(--ivory);
+}
+.photo-empty:hover { background: rgba(156,124,78,.08); border-color: var(--bronze); }
+.photo-empty-icon {
+  width: 80px;
+  height: 80px;
+  opacity: .35;
+}
+.photo-empty-text {
+  font-family: var(--sans-tc);
+  font-weight: 500;
+  font-size: 32px;
+  letter-spacing: .1em;
+  color: currentColor;
+  opacity: .45;
+}
+.photo-empty-hint {
+  font-family: var(--sans-tc);
+  font-size: 24px;
+  opacity: .28;
+}
+.photo-drag-over .photo-empty {
+  background: rgba(156,124,78,.15) !important;
+  border-color: var(--bronze) !important;
+}
+
+/* Text-card bg upload zone */
+.text-bg-empty {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(42,38,34,.06);
+  border: 3px dashed rgba(156,124,78,.35);
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.cover.bg-photo:not(.has-photo) .text-bg-empty { display: flex; }
+.text-bg-empty:hover { background: rgba(156,124,78,.1); border-color: rgba(156,124,78,.6); }
+.cover.photo-drag-over .text-bg-empty { background: rgba(156,124,78,.18) !important; border-color: var(--bronze) !important; }
+
+/* veil */
+.veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  background: linear-gradient(180deg,
+    rgba(26,22,18,.10) 0%,
+    rgba(26,22,18,.02) 38%,
+    rgba(26,22,18,.74) 100%
+  );
+}
+.cover.has-photo:not(.light) .veil { display: block; }
+.cover.bg-photo .veil {
+  display: block;
+  background: linear-gradient(180deg,
+    rgba(26,22,18,.46) 0%,
+    rgba(26,22,18,.34) 42%,
+    rgba(26,22,18,.80) 100%
+  );
+}
+
+/* layout switcher */
+.layout {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+  padding: 96px 84px 232px;
+}
+.cover.L-photo .layout-photo { display: flex; }
+.cover.L-quote .layout-quote { display: flex; }
+.cover.L-route .layout-route { display: flex; }
+.cover.L-story .layout-story { display: flex; }
+
+/* contenteditable */
+[contenteditable] {
+  outline: none;
+  border-radius: 6px;
+  transition: box-shadow .15s;
+  cursor: text;
+}
+[contenteditable]:hover { box-shadow: 0 0 0 3px rgba(156,124,78,.3); }
+[contenteditable]:focus { box-shadow: 0 0 0 3px rgba(156,124,78,.6); }
+[contenteditable]:empty::before { content: attr(data-ph); opacity: .35; }
+
+/* ---- shared bottom bar ---- */
+.botbar {
+  position: absolute;
+  left: 84px;
+  right: 84px;
+  bottom: 96px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  border-top: 1px solid rgba(247,244,237,.28);
+  padding-top: 34px;
+}
+.cover.light .botbar { border-top-color: var(--line); }
+.botbar .mark {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 50px;
+  letter-spacing: .16em;
+  color: currentColor;
+}
+.botbar .mark b { color: var(--accent, #9C7C4E); font-weight: 400; }
+.botbar .sign {
+  margin-left: auto;
+  font-family: var(--latin-italic);
+  font-style: italic;
+  font-size: 46px;
+  opacity: .85;
+}
+.cover.L-story .botbar { justify-content: center; }
+.cover.L-story .botbar .sign { margin-left: 26px; }
+
+/* ---- PHOTO layout ---- */
+.layout-photo .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-family: var(--sans-tc);
+  font-size: 30px;
+  letter-spacing: .32em;
+  font-weight: 600;
+  color: currentColor;
+  opacity: .9;
+}
+.layout-photo .top .num {
+  font-family: var(--latin-italic);
+  font-style: italic;
+  letter-spacing: .04em;
+  font-weight: 500;
+  color: var(--accent, #9C7C4E);
+  opacity: 1;
+}
+.layout-photo .spacer { flex: 1; }
+.layout-photo .loc {
+  font-family: var(--latin-italic);
+  font-style: italic;
+  font-size: 54px;
+  color: var(--accent, #9C7C4E);
+  margin-bottom: 18px;
+}
+.layout-photo h3 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 118px;
+  line-height: 1.22;
+  letter-spacing: .05em;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ---- QUOTE 引言卡 ---- */
+.layout-quote .qbody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.layout-quote .qmark {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 230px;
+  line-height: .7;
+  height: 140px;
+  color: var(--accent, #9C7C4E);
+}
+.layout-quote .quote {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 106px;
+  line-height: 1.4;
+  letter-spacing: .04em;
+  white-space: pre-wrap;
+  margin: 34px 0 46px;
+}
+.layout-quote .attrib {
+  font-family: var(--latin-italic);
+  font-style: italic;
+  font-size: 50px;
+  color: var(--accent, #9C7C4E);
+}
+
+/* ---- ROUTE 路線卡 ---- */
+.layout-route .reyebrow {
+  font-family: var(--sans-tc);
+  font-size: 30px;
+  letter-spacing: .3em;
+  color: var(--accent, #9C7C4E);
+  font-weight: 600;
+}
+.layout-route .rtitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 104px;
+  letter-spacing: .05em;
+  margin: 18px 0 56px;
+  white-space: pre-wrap;
+}
+.layout-route .stops {
+  flex: 1;
+  position: relative;
+  padding-left: 8px;
+}
+.layout-route .stops::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 30px;
+  bottom: 48px;
+  width: 2px;
+  background: var(--accent, #9C7C4E);
+  opacity: .4;
+}
+.stop {
+  display: flex;
+  gap: 36px;
+  padding: 24px 0;
+  position: relative;
+}
+.stop .dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid var(--accent, #9C7C4E);
+  background: var(--cbg);
+  flex: 0 0 auto;
+  margin-top: 14px;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+}
+.stop .nm {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 62px;
+  letter-spacing: .04em;
+  line-height: 1.1;
+}
+.stop .nt {
+  font-family: var(--sans-tc);
+  font-weight: 300;
+  font-size: 34px;
+  opacity: .6;
+  margin-top: 8px;
+}
+
+/* ---- STORY 限動文字卡 ---- */
+.layout-story {
+  text-align: center;
+  align-items: center;
+}
+.layout-story .qbody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.layout-story .seyebrow {
+  font-family: var(--sans-tc);
+  font-size: 30px;
+  letter-spacing: .34em;
+  color: var(--accent, #9C7C4E);
+  font-weight: 600;
+  margin-bottom: 44px;
+}
+.layout-story .stitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 120px;
+  line-height: 1.3;
+  letter-spacing: .05em;
+  white-space: pre-wrap;
+  margin: 0 0 44px;
+}
+.layout-story .subtitle {
+  font-family: var(--sans-tc);
+  font-weight: 300;
+  font-size: 42px;
+  line-height: 1.7;
+  opacity: .7;
+  max-width: 780px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 860px) {
+  .app { flex-direction: column; }
+  .panel {
+    width: 100%;
+    flex: 0 0 auto;
+    height: 48vh;
+    border-right: none;
+    border-bottom: 1px solid var(--line-soft);
+    padding: 16px 16px 40px;
+  }
+  .brandbar .mk { font-size: 17px; }
+  .panel-title { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ CONTROL PANEL ============ -->
+  <aside class="panel">
+    <div class="brandbar">
+      <span class="mk">小旅<b>選</b>品</span>
+      <span class="tg">Cover &amp; Card Maker</span>
+    </div>
+    <h1 class="panel-title">封面 / 文字卡製作</h1>
+    <p class="panel-sub">六款 9:16 版型，改文字、丟照片、選色，匯出 1080×1920 PNG。</p>
+
+    <!-- 版型 -->
+    <div class="grp">
+      <span class="lbl">版型 Layout</span>
+      <div class="seg three" id="seg-mode">
+        <button data-mode="travel" class="on">旅遊封面</button>
+        <button data-mode="pick">選品封面</button>
+        <button data-mode="edit">在地封面</button>
+        <button data-mode="quote">引言卡</button>
+        <button data-mode="route">路線卡</button>
+        <button data-mode="story">限動文字</button>
+      </div>
+    </div>
+
+    <!-- 點綴色 -->
+    <div class="grp">
+      <span class="lbl">點綴色 Accent</span>
+      <div class="swatches" id="swatches">
+        <span class="swatch on" data-c="#9C7C4E" style="background:#9C7C4E" title="古銅金"></span>
+        <span class="swatch" data-c="#E0795A" style="background:#E0795A" title="珊瑚"></span>
+        <span class="swatch" data-c="#D2622F" style="background:#D2622F" title="磚橘"></span>
+        <span class="swatch" data-c="#1F5E59" style="background:#1F5E59" title="墨綠"></span>
+        <span class="swatch" data-c="#7B6EA5" style="background:#7B6EA5" title="薰衣草"></span>
+      </div>
+    </div>
+
+    <!-- 底色 (text cards only) -->
+    <div class="grp" id="grp-bg" data-types="quote route story" hidden>
+      <span class="lbl">底色 Background</span>
+      <div class="seg" id="seg-bg">
+        <button data-bg="dark" class="on">墨底</button>
+        <button data-bg="light">米白底</button>
+        <button data-bg="photo">圖片背景</button>
+      </div>
+      <div id="bg-photo-tip" style="margin-top:10px;display:none">
+        <button class="upload-btn" id="btn-upload-bg">＋ 選取背景圖片</button>
+        <p class="tip" style="margin-top:6px">也可以直接把照片拖進右側畫面。</p>
+      </div>
+    </div>
+
+    <!-- 照片提示 (photo covers) -->
+    <div class="grp" data-types="photo">
+      <span class="lbl">照片 Photo</span>
+      <button class="upload-btn" id="btn-upload-cover" style="margin-bottom:8px">＋ 選取照片</button>
+      <p class="tip">或把照片拖進右側預覽畫面。滿版封面為全幅；在地封面為上方圖框。</p>
+    </div>
+
+    <!-- PHOTO 文字欄位 -->
+    <div class="grp" id="grp-photo-text" data-types="photo">
+      <span class="lbl">文字 Text</span>
+      <div class="fld">
+        <label>標題（可換行）</label>
+        <textarea id="f-title" rows="2">京都的&#10;一個早晨</textarea>
+      </div>
+      <div class="fld">
+        <label>地點（斜體）</label>
+        <input id="f-loc" value="Kyoto, Japan" />
+      </div>
+      <div class="fld">
+        <div class="two">
+          <div>
+            <label>左上標籤</label>
+            <input id="f-label" value="旅行紀錄" />
+          </div>
+          <div class="narrow">
+            <label>編號</label>
+            <input id="f-num" value="NO.014" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUOTE 欄位 -->
+    <div class="grp" id="grp-quote" data-types="quote" hidden>
+      <span class="lbl">文字 Text</span>
+      <div class="fld">
+        <label>引言（可換行）</label>
+        <textarea id="f-quote" rows="3">去了再說，&#10;再講究。</textarea>
+      </div>
+      <div class="fld">
+        <label>出處 / 署名（斜體）</label>
+        <input id="f-attrib" value="— 小旅選品" />
+      </div>
+    </div>
+
+    <!-- ROUTE 欄位 -->
+    <div class="grp" id="grp-route" data-types="route" hidden>
+      <span class="lbl">文字 Text</span>
+      <div class="fld">
+        <label>上標</label>
+        <input id="f-eyebrow" value="一日小旅 · ROUTE" />
+      </div>
+      <div class="fld">
+        <label>標題（可換行）</label>
+        <textarea id="f-rtitle" rows="1">京都・東山</textarea>
+      </div>
+      <div class="fld">
+        <label>站點（每行一站，用｜分隔名稱與備註）</label>
+        <textarea id="f-stops" rows="5">清水寺｜晨光與石階
+三年坂｜老舖與和菓子
+八坂塔｜巷弄的剪影
+祇園｜暮色散步</textarea>
+      </div>
+    </div>
+
+    <!-- STORY 欄位 -->
+    <div class="grp" id="grp-story" data-types="story" hidden>
+      <span class="lbl">文字 Text</span>
+      <div class="fld">
+        <label>上標</label>
+        <input id="f-seyebrow" value="小旅筆記" />
+      </div>
+      <div class="fld">
+        <label>主標（可換行）</label>
+        <textarea id="f-stitle" rows="2">出發，&#10;是最好的計畫</textarea>
+      </div>
+      <div class="fld">
+        <label>副標</label>
+        <textarea id="f-subtitle" rows="2">在路上遇見的，才值得帶回家。</textarea>
+      </div>
+    </div>
+
+    <!-- 共用署名 -->
+    <div class="grp">
+      <div class="fld">
+        <label>底欄署名</label>
+        <input id="f-sign" value="去了再說" />
+      </div>
+    </div>
+
+    <button class="dlbtn" id="download">↓ 下載 PNG（1080×1920）</button>
+    <p class="note" id="note">字體首次匯出需幾秒，請稍候</p>
+  </aside>
+
+  <!-- ============ LIVE PREVIEW ============ -->
+  <div class="stage" id="stage">
+    <div class="scaler" id="scaler">
+      <div class="cover L-photo has-photo mode-travel" id="cover">
+
+        <!-- Photo / bg image -->
+        <img class="cover-photo" id="cover-photo-img" alt="" />
+        <div class="veil"></div>
+
+        <!-- Drop zone shown on text-cards when bg=photo but no image yet -->
+        <div class="text-bg-empty" id="text-bg-empty">
+          <svg width="72" height="72" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.35">
+            <rect x="4" y="4" width="40" height="40" rx="5"/>
+            <circle cx="16" cy="16" r="4"/>
+            <path d="M44 30 L34 20 L20 36"/><path d="M4 38 L14 28 L20 36"/>
+          </svg>
+          <div style="font-family:var(--sans-tc);font-weight:500;font-size:36px;letter-spacing:.1em;opacity:.45;margin-top:20px">拖入背景照片</div>
+          <div style="font-family:var(--sans-tc);font-size:26px;opacity:.28;margin-top:10px">或點擊選取檔案</div>
+        </div>
+
+        <!-- Empty photo drop zone (shown when no photo) -->
+        <div class="photo-empty" id="photo-empty">
+          <svg class="photo-empty-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="40" height="40" rx="5"/>
+            <circle cx="16" cy="16" r="4"/>
+            <path d="M44 30 L34 20 L20 36"/>
+            <path d="M4 38 L14 28 L20 36"/>
+          </svg>
+          <div class="photo-empty-text">拖入照片</div>
+          <div class="photo-empty-hint">或點擊選取檔案</div>
+        </div>
+
+        <!-- PHOTO layout -->
+        <div class="layout layout-photo">
+          <div class="top">
+            <span id="c-label">旅行紀錄</span>
+            <span class="num" id="c-num">NO.014</span>
+          </div>
+          <div class="spacer"></div>
+          <div class="loc" id="c-loc" data-ph="地點" contenteditable="true">Kyoto, Japan</div>
+          <h3 id="c-title" data-ph="標題" contenteditable="true">京都的
+一個早晨</h3>
+        </div>
+
+        <!-- QUOTE layout -->
+        <div class="layout layout-quote">
+          <div class="qbody">
+            <div class="qmark">&#8220;</div>
+            <div class="quote" id="c-quote" data-ph="引言" contenteditable="true">去了再說，
+再講究。</div>
+            <div class="attrib" id="c-attrib">— 小旅選品</div>
+          </div>
+        </div>
+
+        <!-- ROUTE layout -->
+        <div class="layout layout-route">
+          <div class="reyebrow" id="c-eyebrow">一日小旅 · ROUTE</div>
+          <div class="rtitle" id="c-rtitle" data-ph="標題" contenteditable="true">京都・東山</div>
+          <div class="stops" id="c-stops"></div>
+        </div>
+
+        <!-- STORY layout -->
+        <div class="layout layout-story">
+          <div class="qbody">
+            <div class="seyebrow" id="c-seyebrow">小旅筆記</div>
+            <div class="stitle" id="c-stitle" data-ph="主標" contenteditable="true">出發，
+是最好的計畫</div>
+            <div class="subtitle" id="c-subtitle">在路上遇見的，才值得帶回家。</div>
+          </div>
+        </div>
+
+        <!-- Shared signature bar -->
+        <div class="botbar">
+          <span class="mark">小旅<b>選</b>品</span>
+          <span class="sign" id="c-sign">去了再說</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input -->
+  <input type="file" id="file-input" accept="image/png,image/jpeg,image/webp,image/avif" hidden />
+</div>
+
+<script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var cover   = document.getElementById('cover');
+  var scaler  = document.getElementById('scaler');
+  var stage   = document.getElementById('stage');
+  var photoEmpty    = document.getElementById('photo-empty');
+  var textBgEmpty   = document.getElementById('text-bg-empty');
+  var photoImg      = document.getElementById('cover-photo-img');
+  var fileInput     = document.getElementById('file-input');
+
+  function $$(id) { return document.getElementById(id); }
+
+  /* =========================================================
+     FIT PREVIEW
+     ========================================================= */
+  function fit() {
+    var pad = 48;
+    var s = Math.min(
+      (stage.clientWidth  - pad) / 1080,
+      (stage.clientHeight - pad) / 1920,
+      0.52
+    );
+    scaler.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit);
+
+  /* =========================================================
+     MODE CONFIG
+     ========================================================= */
+  var M = {
+    travel: { layout: 'photo', light: false, photo: true,
+      d: { label: '旅行紀錄', num: 'NO.014', loc: 'Kyoto, Japan',
+           title: '京都的\n一個早晨', sign: '去了再說' } },
+    pick:   { layout: 'photo', light: false, photo: true,
+      d: { label: '本週選品', num: 'PICK', loc: "Editor's Pick",
+           title: '帶回家的\n那只杯', sign: '選得好' } },
+    edit:   { layout: 'photo', light: true,  photo: true,
+      d: { label: '在地店家', num: 'EAT', loc: 'Tainan · 巷弄',
+           title: '轉角的\n一張木桌', sign: 'Go First' } },
+    quote:  { layout: 'quote', light: true,  photo: false,
+      d: { quote: '去了再說，\n再講究。', attrib: '— 小旅選品',
+           sign: 'Go First, Choose Well' } },
+    route:  { layout: 'route', light: false, photo: false,
+      d: { eyebrow: '一日小旅 · ROUTE', rtitle: '京都・東山',
+           stops: '清水寺｜晨光與石階\n三年坂｜老舖與和菓子\n八坂塔｜巷弄的剪影\n祇園｜暮色散步',
+           sign: '去了再說' } },
+    story:  { layout: 'story', light: false, photo: false,
+      d: { eyebrow: '小旅筆記', title: '出發，\n是最好的計畫',
+           subtitle: '在路上遇見的，才值得帶回家。', sign: '去了再說' } }
+  };
+
+  var cur   = 'travel';
+  var curBg = 'dark';
+  var photoData = null; // base64 data URL for dropped photo
+
+  /* =========================================================
+     TEXT-CARD BACKGROUND
+     ========================================================= */
+  function applyTextBg(bg) {
+    cover.classList.toggle('light',     bg === 'light');
+    cover.classList.toggle('has-photo', bg === 'photo' && !!photoData);
+    cover.classList.toggle('bg-photo',  bg === 'photo');
+    var tip = $$('bg-photo-tip');
+    if (tip) tip.style.display = (bg === 'photo') ? 'block' : 'none';
+    if (bg === 'photo' && photoData) {
+      photoImg.src = photoData;
+    }
+  }
+
+  /* =========================================================
+     SET MODE
+     ========================================================= */
+  function setMode(m) {
+    cur = m;
+    var cfg = M[m];
+
+    if (cfg.photo) {
+      // photo/framed cover
+      var cls = 'cover L-' + cfg.layout + (cfg.light ? ' light' : '') + ' mode-' + m;
+      if (photoData) cls += ' has-photo';
+      cover.className = cls;
+    } else {
+      // text-card modes
+      curBg = cfg.light ? 'light' : 'dark';
+      cover.className = 'cover L-' + cfg.layout + ' mode-' + m;
+      applyTextBg(curBg);
+    }
+
+    // show/hide panel groups
+    document.querySelectorAll('.grp[data-types]').forEach(function (g) {
+      g.hidden = g.dataset.types.indexOf(cfg.layout) === -1;
+    });
+
+    // bg toggle state
+    $$('seg-bg').querySelectorAll('button').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.bg === curBg);
+    });
+
+    // load defaults
+    var d = cfg.d;
+    if (cfg.layout === 'photo') {
+      $$('f-label').value = d.label;
+      $$('f-num').value   = d.num;
+      $$('f-loc').value   = d.loc;
+      $$('f-title').value = d.title;
+    }
+    if (cfg.layout === 'quote') {
+      $$('f-quote').value  = d.quote;
+      $$('f-attrib').value = d.attrib;
+    }
+    if (cfg.layout === 'route') {
+      $$('f-eyebrow').value = d.eyebrow;
+      $$('f-rtitle').value  = d.rtitle;
+      $$('f-stops').value   = d.stops;
+    }
+    if (cfg.layout === 'story') {
+      $$('f-seyebrow').value = d.eyebrow;
+      $$('f-stitle').value   = d.title;
+      $$('f-subtitle').value = d.subtitle;
+    }
+    $$('f-sign').value = d.sign;
+    syncAll();
+  }
+
+  $$('seg-mode').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    this.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    setMode(b.dataset.mode);
+  });
+
+  /* =========================================================
+     BG TOGGLE (text modes)
+     ========================================================= */
+  $$('seg-bg').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    this.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    curBg = b.dataset.bg;
+    applyTextBg(curBg);
+  });
+
+  /* =========================================================
+     ACCENT COLOUR
+     ========================================================= */
+  $$('swatches').addEventListener('click', function (e) {
+    var s = e.target.closest('.swatch');
+    if (!s) return;
+    this.querySelectorAll('.swatch').forEach(function (x) { x.classList.remove('on'); });
+    s.classList.add('on');
+    cover.style.setProperty('--accent', s.dataset.c);
+  });
+  cover.style.setProperty('--accent', '#9C7C4E');
+
+  /* =========================================================
+     RENDER ROUTE STOPS
+     ========================================================= */
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function renderStops() {
+    var lines = $$('f-stops').value.split('\n').filter(function (l) { return l.trim(); });
+    var html = lines.map(function (l) {
+      var parts = l.split('｜');
+      var nm = (parts[0] || '').trim();
+      var nt = (parts[1] || '').trim();
+      return '<div class="stop"><span class="dot"></span>' +
+        '<div class="info"><div class="nm">' + esc(nm) + '</div>' +
+        (nt ? '<div class="nt">' + esc(nt) + '</div>' : '') +
+        '</div></div>';
+    }).join('');
+    $$('c-stops').innerHTML = html;
+  }
+
+  /* =========================================================
+     SYNC PANEL → COVER
+     ========================================================= */
+  function syncAll() {
+    $$('c-label').textContent    = $$('f-label').value;
+    $$('c-num').textContent      = $$('f-num').value;
+    $$('c-loc').textContent      = $$('f-loc').value;
+    $$('c-title').textContent    = $$('f-title').value;
+    $$('c-quote').textContent    = $$('f-quote').value;
+    $$('c-attrib').textContent   = $$('f-attrib').value;
+    $$('c-eyebrow').textContent  = $$('f-eyebrow').value;
+    $$('c-rtitle').textContent   = $$('f-rtitle').value;
+    renderStops();
+    $$('c-seyebrow').textContent = $$('f-seyebrow').value;
+    $$('c-stitle').textContent   = $$('f-stitle').value;
+    $$('c-subtitle').textContent = $$('f-subtitle').value;
+    $$('c-sign').textContent     = $$('f-sign').value;
+  }
+
+  // Live field bindings
+  [
+    ['f-label',    'c-label'],
+    ['f-num',      'c-num'],
+    ['f-loc',      'c-loc'],
+    ['f-title',    'c-title'],
+    ['f-quote',    'c-quote'],
+    ['f-attrib',   'c-attrib'],
+    ['f-eyebrow',  'c-eyebrow'],
+    ['f-rtitle',   'c-rtitle'],
+    ['f-seyebrow', 'c-seyebrow'],
+    ['f-stitle',   'c-stitle'],
+    ['f-subtitle', 'c-subtitle'],
+    ['f-sign',     'c-sign']
+  ].forEach(function (p) {
+    $$(p[0]).addEventListener('input', function () { $$(p[1]).textContent = this.value; });
+  });
+  $$('f-stops').addEventListener('input', renderStops);
+
+  // Contenteditable → panel sync
+  function backbind(cid, fid, multi) {
+    $$(cid).addEventListener('input', function () {
+      $$(fid).value = multi ? this.innerText : this.textContent;
+    });
+  }
+  backbind('c-loc',    'f-loc');
+  backbind('c-title',  'f-title',  true);
+  backbind('c-quote',  'f-quote',  true);
+  backbind('c-rtitle', 'f-rtitle', true);
+  backbind('c-stitle', 'f-stitle', true);
+
+  /* =========================================================
+     PHOTO HANDLING
+     ========================================================= */
+  var MAX_DIM = 2160; // retina 1080px
+
+  function ingestFile(file) {
+    if (!file) return;
+    var types = ['image/png', 'image/jpeg', 'image/webp', 'image/avif'];
+    if (types.indexOf(file.type) < 0) return;
+
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var img = new Image();
+      img.onload = function () {
+        var canvas = document.createElement('canvas');
+        var scale = Math.min(1, MAX_DIM / Math.max(img.width, img.height));
+        canvas.width  = Math.round(img.width  * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        photoData = canvas.toDataURL('image/webp', 0.88);
+        applyPhoto();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function applyPhoto() {
+    var cfg = M[cur];
+    if (cfg.photo) {
+      // photo cover: add has-photo
+      photoImg.src = photoData;
+      if (cover.className.indexOf('has-photo') === -1) {
+        cover.className = cover.className + ' has-photo';
+      }
+    } else if (curBg === 'photo') {
+      // text-card bg mode: set image and flip has-photo
+      photoImg.src = photoData;
+      cover.classList.add('has-photo');
+    }
+  }
+
+  // Drag & drop on the stage/cover
+  var dragDepth = 0;
+  cover.addEventListener('dragenter', function (e) {
+    e.preventDefault(); e.stopPropagation();
+    dragDepth++;
+    cover.classList.add('photo-drag-over');
+  });
+  cover.addEventListener('dragover', function (e) {
+    e.preventDefault(); e.stopPropagation();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+  });
+  cover.addEventListener('dragleave', function (e) {
+    e.stopPropagation();
+    if (--dragDepth <= 0) { dragDepth = 0; cover.classList.remove('photo-drag-over'); }
+  });
+  cover.addEventListener('drop', function (e) {
+    e.preventDefault(); e.stopPropagation();
+    dragDepth = 0;
+    cover.classList.remove('photo-drag-over');
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    ingestFile(f);
+  });
+
+  // Click on empty state to browse
+  photoEmpty.addEventListener('click', function () { fileInput.click(); });
+  textBgEmpty.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    ingestFile(this.files && this.files[0]);
+    this.value = '';
+  });
+
+  // Panel upload buttons
+  var btnUploadBg    = document.getElementById('btn-upload-bg');
+  var btnUploadCover = document.getElementById('btn-upload-cover');
+  if (btnUploadBg)    btnUploadBg.addEventListener('click',    function () { fileInput.click(); });
+  if (btnUploadCover) btnUploadCover.addEventListener('click', function () { fileInput.click(); });
+
+  // Double-click filled photo to replace
+  cover.addEventListener('dblclick', function (e) {
+    if (photoData && M[cur].photo) { fileInput.click(); }
+  });
+
+  /* =========================================================
+     EXPORT PNG
+     ========================================================= */
+  var btn  = $$('download');
+  var note = $$('note');
+
+  btn.addEventListener('click', async function () {
+    btn.disabled = true;
+    var keep = note.textContent;
+    note.textContent = '匯出中，請稍候…';
+
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      var opts = { width: 1080, height: 1920, pixelRatio: 1, cacheBust: true };
+      // warm-up pass (embeds fonts)
+      await htmlToImage.toPng(cover, opts);
+      var url = await htmlToImage.toPng(cover, opts);
+      var a = document.createElement('a');
+      a.download = '小旅選品-' + cur + '.png';
+      a.href = url;
+      a.click();
+      note.textContent = '已下載 ✓';
+    } catch (err) {
+      console.error(err);
+      note.textContent = '匯出失敗，請再試一次';
+    } finally {
+      btn.disabled = false;
+      setTimeout(function () { note.textContent = keep; }, 3000);
+    }
+  });
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  setMode('travel');
+  window.addEventListener('load', function () { setTimeout(fit, 80); });
+  fit();
+
+})();
+</script>
+</body>
+</html>
